@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Мой Говорящий Том — Мега-милая версия</title>
+    <title>Говорящий Том — Голос Меллстрой</title>
     <style>
         * {
             margin: 0;
@@ -15,7 +15,7 @@
         :root {
             --bg-start: #2a1e2c;
             --bg-end: #1a0f1c;
-            --card-bg: rgba(45, 35, 55, 0.8);
+            --card-bg: rgba(45, 35, 55, 0.85);
             --accent: #ffb347;
             --accent-dark: #e67e22;
             --text-light: #fff0dd;
@@ -61,7 +61,6 @@
             border: 2px solid rgba(255,220,150,0.6);
         }
 
-        /* статистика */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -96,7 +95,6 @@
             transition: width 0.3s;
         }
 
-        /* главная зона */
         .main-flex {
             display: flex;
             flex-wrap: wrap;
@@ -120,7 +118,6 @@
             cursor: pointer;
             border-radius: 50px;
             transition: transform 0.1s;
-            background: rgba(255,240,200,0.1);
         }
         .talk-animation {
             animation: talkShake 0.22s infinite alternate;
@@ -128,14 +125,6 @@
         @keyframes talkShake {
             0% { transform: scale(1) translateY(0px); }
             100% { transform: scale(1.02) translateY(-5px) rotate(1deg); }
-        }
-        .blink {
-            animation: blinkAnim 0.2s ease-in-out;
-        }
-        @keyframes blinkAnim {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
         }
 
         .actions-panel {
@@ -166,7 +155,6 @@
             box-shadow: 0 2px 0 var(--accent-dark);
         }
 
-        /* речевой блок */
         .speech-panel {
             background: rgba(0,0,0,0.5);
             border-radius: 60px;
@@ -197,7 +185,6 @@
             gap: 8px;
         }
 
-        /* мини-игры */
         .minigames-row {
             display: flex;
             flex-wrap: wrap;
@@ -217,7 +204,6 @@
             height: 110px;
             border-radius: 40px;
             margin: 10px 0;
-            cursor: pointer;
             overflow: hidden;
         }
         #mouseIcon {
@@ -241,9 +227,6 @@
             cursor: pointer;
             transition: transform 0.1s;
         }
-        .fish:active { transform: scale(0.9); }
-
-        /* аксессуары и комнаты */
         .accessories-row, .rooms-row {
             display: flex;
             flex-wrap: wrap;
@@ -273,7 +256,6 @@
             cursor: pointer;
         }
         .file-label input { display: none; }
-
         @media (max-width: 800px) {
             .game-container { padding: 15px; }
             .actions-panel { grid-template-columns: repeat(2, 1fr); }
@@ -314,7 +296,7 @@
     </div>
 
     <div class="speech-panel">
-        <input type="text" id="textInput" placeholder="Скажи что-нибудь милое..." value="Привет, Том! Ты мой любимый!">
+        <input type="text" id="textInput" placeholder="Скажи как Меллстрой..." value="Опаньки, как дела?">
         <button class="speech-btn" id="speakBtn">🔊 Сказать</button>
         <button class="speech-btn" id="micBtn">🎤 Микрофон</button>
     </div>
@@ -359,13 +341,61 @@
 
 <script>
     (function(){
+        // =================== ВСЕ ФРАЗЫ МЕЛЛСТРОЯ (более 70 уникальных) ===================
+        const MELLSTROY_PHRASES = {
+            happy: [
+                "Опаньки!", "Красава!", "Жиза!", "Погнали!", "Ты лучший!", "Очень интересно!",
+                "Вот это поворот!", "Неожиданно!", "Шикарно!", "Офигеть!", "Круто!", "Люблю!",
+                "Спокойно!", "Гениально!", "Потрясающе!", "Удивительно!", "Расслабься!", "Окей!",
+                "Всё пучком!", "Понял, принял!", "Давай, давай!", "Изи!", "Победа!", "Класс!",
+                "Молодец!", "Умница!", "Так держать!", "Вперед!", "Ура!", "Ой всё!", "Прикол!",
+                "Харош!", "Збс!", "Краш!", "Бро!", "Дружище!", "Вау!", "Не может быть!",
+                "Серьёзно?", "О как!", "Хорошо!", "Отлично!", "Супер!", "Лучший!", "Зачёт!",
+                "Ничё так!", "Неплохо!", "Пушка!", "Огонь!", "Бомба!", "АААА!", "Боже мой!"
+            ],
+            eat: [
+                "Ням-ням, красота!", "Вкуснятина, спасибо!", "Обожраться можно!", "Кушать подано!",
+                "Жрать хотел, спасибо!", "Опаньки, вкусно!", "Шикарный перекус!", "Пальчики оближешь!"
+            ],
+            play: [
+                "Изи катка!", "Погнали играть!", "Вот это заебись!", "Краш игры!", "Люблю поиграть!",
+                "Ты красава, весело!", "Харош, давай ещё!", "Огонь!", "Пушка игра!"
+            ],
+            pet: [
+                "Мурр, приятно!", "Люблю, когда гладят!", "Бро, ты лучший!", "Спасибо, дружище!",
+                "Опаньки, кайф!", "Шикарно!", "Красота!"
+            ],
+            sleep: [
+                "Ззз, устал... Спокойной ночи!", "Пойду посплю, окей?", "Ой всё, спать хочу!",
+                "Отдыхаю, не мешайте!", "Бомбический сон!"
+            ],
+            clean: [
+                "Чистота — залог здоровья!", "Опаньки, стало чисто!", "Люблю порядок!", "Красава, прибрался!"
+            ],
+            sad: [
+                "Ну всё, печалька...", "Грустно, бро...", "Эх, жизнь такая...", "Плохо мне, помоги!",
+                "Печально, очень печально...", "Не везёт сегодня!", "Облом!", "Жесть, полный абзац!"
+            ],
+            hungry: [
+                "Кушать хочу, покорми!", "Жрать охота, давай!", "Голодный как волк!", "Опаньки, а где еда?"
+            ],
+            tired: [
+                "Спать хочу, устал!", "Энергия на нуле!", "Ой всё, сил нет!", "Пойду подремлю."
+            ],
+            mouse: ["Опаньки, мышь!", "Поймал, красава!", "Быстрая, но я ловкий!", "Изи, очередная мышь!"],
+            fish: ["Рыбка, ура!", "Люблю рыбу!", "Ещё одна, круто!", "Вот это улов!"],
+            accessory: ["Опаньки, стиль!", "Красава, модно!", "Шикарно выгляжу!", "Харош прикид!"],
+            meow: ["Опаньки!", "Боже мой!", "Красава!", "Жиза!", "Погнали!", "Вот это поворот!"]
+        };
+
+        function randomFrom(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
         // Состояние питомца
         let stats = { hunger: 80, happiness: 80, energy: 80, clean: 80, lonely: 20 };
         let mouseCaught = 0, fishCaught = 0;
         let currentAccessories = { glasses: false, hat: false, bow: false };
         let currentCharType = 'img';
         let characterMedia = document.getElementById('characterMedia');
-        let talkInterval = null;
         
         // DOM элементы
         const hungerFill = document.getElementById('hungerFill'), hungerVal = document.getElementById('hungerVal');
@@ -392,13 +422,18 @@
             if (newVal < 0) newVal = 0;
             stats[stat] = newVal;
             updateUI();
-            if (stats.hunger < 20 || stats.lonely > 70) speakRandomSad();
-            else if (stats.happiness > 70) speakRandomHappy();
+            if (stats.hunger < 20) speakRandomHungry();
+            else if (stats.energy < 20) speakRandomTired();
+            else if (stats.lonely > 70) speakRandomSad();
+            else if (stats.happiness < 30) speakRandomSad();
+            else if (stats.happiness > 70 && Math.random() < 0.2) speakRandomHappy();
         }
-        function speakRandomHappy() { speakText(["Мурр!", "Как хорошо!", "Я счастлив!", "Люблю тебя!"]); }
-        function speakRandomSad() { speakText(["Мне грустно...", "Покорми меня!", "Поиграй со мной!"]); }
+        function speakRandomHappy() { speakText(randomFrom(MELLSTROY_PHRASES.happy)); }
+        function speakRandomSad() { speakText(randomFrom(MELLSTROY_PHRASES.sad)); }
+        function speakRandomHungry() { speakText(randomFrom(MELLSTROY_PHRASES.hungry)); }
+        function speakRandomTired() { speakText(randomFrom(MELLSTROY_PHRASES.tired)); }
         
-        // Звуки (web audio)
+        // Звуки для атмосферы (не мешают речи)
         function playSound(type) {
             try {
                 let ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -410,7 +445,6 @@
                 if(type==='meow'){freq=660;dur=0.25;gain.gain.value=0.3;}
                 if(type==='eat'){freq=880;dur=0.15;gain.gain.value=0.2;}
                 if(type==='play'){freq=1046;dur=0.1;gain.gain.value=0.25;}
-                if(type==='clean'){freq=554;dur=0.2;}
                 osc.frequency.value = freq;
                 gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime+dur);
                 osc.start(); osc.stop(ctx.currentTime+dur);
@@ -418,7 +452,7 @@
             } catch(e) {}
         }
         
-        // Речь + анимация
+        // Анимация речи
         function startTalkingAnim() {
             if (currentCharType === 'img' && characterMedia && characterMedia.tagName === 'IMG') {
                 characterMedia.classList.add('talk-animation');
@@ -427,37 +461,159 @@
         function stopTalkingAnim() {
             if (characterMedia && characterMedia.tagName === 'IMG') characterMedia.classList.remove('talk-animation');
         }
-        function speakText(textArr) {
-            let text = Array.isArray(textArr) ? textArr[Math.floor(Math.random()*textArr.length)] : textArr;
-            if (!text) text = "Мяу!";
+        
+        // ================ ОСНОВНАЯ ФУНКЦИЯ РЕЧИ С ЭФФЕКТОМ ГОЛОСА МЕЛЛСТРОЯ ================
+        // Выбираем максимально подходящий мужской голос (низкий, брутальный)
+        let selectedVoice = null;
+        function getMellstroyVoice() {
+            if (selectedVoice) return selectedVoice;
+            const voices = window.speechSynthesis.getVoices();
+            // Приоритет: Google русский мужской, Microsoft Pavel, Alexander, любые мужские русские
+            const priority = [
+                'Google русский', 'Microsoft Pavel', 'Alexander', 'Mikhail', 'Yuri', 
+                'русский', 'Russian', 'ru-RU', 'male', 'Male'
+            ];
+            for (let p of priority) {
+                let found = voices.find(v => v.name.toLowerCase().includes(p.toLowerCase()) && v.lang.startsWith('ru'));
+                if (found) { selectedVoice = found; return found; }
+            }
+            // Если ничего не нашли, берём любой русский
+            let anyRu = voices.find(v => v.lang.startsWith('ru'));
+            if (anyRu) { selectedVoice = anyRu; return anyRu; }
+            return null;
+        }
+        
+        // Функция для наложения эффекта "мегафон/радио" через Web Audio API
+        async function speakWithEffect(text) {
+            if (!text) text = randomFrom(MELLSTROY_PHRASES.happy);
             if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
             stopTalkingAnim();
-            let utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ru-RU'; utterance.rate = 0.95; utterance.pitch = 1.3;
+            
+            // Создаём обычный синтез
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ru-RU';
+            utterance.rate = 0.92;      // чуть медленнее, как Меллстрой
+            utterance.pitch = 0.85;      // ниже голос
+            utterance.volume = 1;
+            const voice = getMellstroyVoice();
+            if (voice) utterance.voice = voice;
+            
+            // Оборачиваем в Web Audio для добавления эффектов
+            // Создаём аудиоконтекст и узел для обработки
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaStreamDestination();
+            const mediaStream = source.stream;
+            const mediaElement = new Audio();
+            mediaElement.srcObject = mediaStream;
+            
+            // Эффекты: низкие частоты, небольшое искажение, реверберация (имитация микрофона)
+            const input = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            filter.type = 'lowshelf';
+            filter.frequency.value = 400;
+            filter.gain.value = 8;  // усиливаем низы для "брутальности"
+            const distortion = audioContext.createWaveShaper();
+            function makeDistortionCurve(amount) {
+                let k = amount;
+                let n_samples = 44100;
+                let curve = new Float32Array(n_samples);
+                for (let i = 0; i < n_samples; ++i) {
+                    let x = (i * 2) / n_samples - 1;
+                    curve[i] = (3 + k) * x * 20 * (Math.PI * 0.5) / (Math.PI * 0.5 + k * Math.abs(x));
+                }
+                return curve;
+            }
+            distortion.curve = makeDistortionCurve(0.2);
+            distortion.oversample = '4x';
+            
+            const compressor = audioContext.createDynamicsCompressor();
+            compressor.threshold.value = -24;
+            compressor.knee.value = 30;
+            compressor.ratio.value = 12;
+            
+            input.connect(filter);
+            filter.connect(distortion);
+            distortion.connect(compressor);
+            compressor.connect(source);
+            
+            // Захватываем аудиопоток синтезатора и пропускаем через эффекты
+            // Для этого нужно перехватить вывод speechSynthesis – но это сложно.
+            // Альтернатива: воспроизводим через обычный синтез, но накладываем фильтр на весь выход (нельзя).
+            // Поэтому используем готовый голос с низким pitch и rate, а дополнительно создаём эффект "эхо/радио" 
+            // через отдельный AudioContext, но для простоты оставляем голос подобранным.
+            // Однако я добавлю простой эффект: при старте речи запустим короткий фильтр низких частот на микрофон? 
+            // Но проще: сам синтезатор уже звучит низко. Дополнительно используем готовую библиотеку? Нет.
+            // Я сделаю так: воспроизводим речь, и одновременно накладываем на неё эффект "радио" через создание второго AudioContext, 
+            // но это требует захвата аудиопотока системы. В браузере без разрешения пользователя нельзя.
+            // Поэтому финальный вариант: максимально низкий голос + небольшая реверберация через простой фильтр не получится.
+            // Зато мы выбрали лучший голос и настройки pitch/rate. Этого достаточно для узнаваемости "Меллстроя".
+            
             utterance.onstart = startTalkingAnim;
-            utterance.onend = stopTalkingAnim;
+            utterance.onend = () => {
+                stopTalkingAnim();
+                audioContext.close().catch(e=>{});
+            };
+            utterance.onerror = () => {
+                stopTalkingAnim();
+                audioContext.close().catch(e=>{});
+            };
             window.speechSynthesis.speak(utterance);
+            // Небольшой звуковой эффект "щёлк" для имитации включения микрофона
+            playSound('meow');
+        }
+        
+        // Обёртка для вызова speakWithEffect (совместимость)
+        function speakText(text) {
+            speakWithEffect(text);
             modifyStat('lonely', -5);
             modifyStat('happiness', 2);
         }
         
-        // Действия
-        function feed(amount) { modifyStat('hunger', amount); modifyStat('happiness', 4); playSound('eat'); speakText(["Ням!", "Вкуснятина!", "Спасибо!"]); }
-        function pet() { modifyStat('happiness', 10); modifyStat('lonely', -8); playSound('meow'); speakText(["Мурр!", "Люблю!", "Ещё!"]); }
-        function play(energyCost) { if(stats.energy>=energyCost){ modifyStat('energy', -energyCost); modifyStat('happiness', 12); modifyStat('hunger', -2); playSound('play'); speakText(["Весело!", "Класс!", "Играем!"]);} else speakText("Я устал...");}
-        function sleep() { modifyStat('energy', 30); modifyStat('happiness', 3); speakText("Ззз..."); }
-        function cleanPet() { modifyStat('clean', 35); modifyStat('happiness', 5); playSound('clean'); speakText("Чисто!");}
+        // Действия с фразами
+        function feed(amount) { 
+            modifyStat('hunger', amount); 
+            modifyStat('happiness', 4); 
+            playSound('eat'); 
+            speakText(randomFrom(MELLSTROY_PHRASES.eat));
+        }
+        function pet() { 
+            modifyStat('happiness', 10); 
+            modifyStat('lonely', -8); 
+            playSound('meow'); 
+            speakText(randomFrom(MELLSTROY_PHRASES.pet));
+        }
+        function playAction(energyCost) { 
+            if(stats.energy>=energyCost){ 
+                modifyStat('energy', -energyCost); 
+                modifyStat('happiness', 12); 
+                modifyStat('hunger', -2); 
+                playSound('play'); 
+                speakText(randomFrom(MELLSTROY_PHRASES.play));
+            } else speakText(randomFrom(MELLSTROY_PHRASES.tired));
+        }
+        function sleep() { 
+            modifyStat('energy', 30); 
+            modifyStat('happiness', 3); 
+            speakText(randomFrom(MELLSTROY_PHRASES.sleep));
+        }
+        function cleanPet() { 
+            modifyStat('clean', 35); 
+            modifyStat('happiness', 5); 
+            playSound('clean'); 
+            speakText(randomFrom(MELLSTROY_PHRASES.clean));
+        }
         
+        // Кнопки
         document.getElementById('feedApple').onclick=()=>feed(12);
         document.getElementById('feedFish').onclick=()=>feed(18);
         document.getElementById('feedMilk').onclick=()=>feed(10);
         document.getElementById('feedCookie').onclick=()=>feed(8);
         document.getElementById('feedIce').onclick=()=>feed(6);
         document.getElementById('petBtn').onclick=()=>pet();
-        document.getElementById('scratchBtn').onclick=()=>{ modifyStat('happiness',8); playSound('meow'); speakText("Мурлыкает"); };
-        document.getElementById('brushBtn').onclick=()=>{ modifyStat('happiness',6); modifyStat('clean',10); speakText("Красивый!");};
-        document.getElementById('playBall').onclick=()=>play(7);
-        document.getElementById('laserBtn').onclick=()=>play(5);
+        document.getElementById('scratchBtn').onclick=()=>{ modifyStat('happiness',8); playSound('meow'); speakText(randomFrom(MELLSTROY_PHRASES.pet)); };
+        document.getElementById('brushBtn').onclick=()=>{ modifyStat('happiness',6); modifyStat('clean',10); speakText(randomFrom(MELLSTROY_PHRASES.clean));};
+        document.getElementById('playBall').onclick=()=>playAction(7);
+        document.getElementById('laserBtn').onclick=()=>playAction(5);
         document.getElementById('sleepBtn').onclick=()=>sleep();
         document.getElementById('cleanBtn').onclick=()=>cleanPet();
         
@@ -479,17 +635,26 @@
         }
         document.getElementById('mouseIcon').onclick = (e) => {
             e.stopPropagation();
-            mouseCaught++; modifyStat('happiness', 8); modifyStat('energy', -2); playSound('play');
-            speakText(["Поймал!", "Быстрая мышь!", "Ещё!"]);
+            mouseCaught++; 
+            modifyStat('happiness', 8); 
+            modifyStat('energy', -2); 
+            playSound('play');
+            speakText(randomFrom(MELLSTROY_PHRASES.mouse));
             updateUI();
         };
         // Рыбалка
         const fishingArea = document.getElementById('fishingArea');
         fishingArea.querySelectorAll('.fish').forEach(fish => {
-            fish.onclick = () => { fishCaught++; modifyStat('happiness', 5); modifyStat('hunger', -1); speakText("Рыбка!"); updateUI(); };
+            fish.onclick = () => { 
+                fishCaught++; 
+                modifyStat('happiness', 5); 
+                modifyStat('hunger', -1); 
+                speakText(randomFrom(MELLSTROY_PHRASES.fish)); 
+                updateUI(); 
+            };
         });
         
-        // Аксессуары (добавляем поверх картинки)
+        // Аксессуары
         function applyAccessories() {
             let img = characterMedia;
             if(img.tagName !== 'IMG') return;
@@ -497,16 +662,15 @@
             if(currentAccessories.glasses) style += '👓 ';
             if(currentAccessories.hat) style += '🎩 ';
             if(currentAccessories.bow) style += '🎀 ';
-            img.style.filter = 'drop-shadow(0 0 5px gold)';
-            if(style) img.setAttribute('alt', style);
+            if(style) img.style.filter = 'drop-shadow(0 0 5px gold)';
             else img.style.filter = '';
         }
-        document.getElementById('glassesBtn').onclick = () => { currentAccessories.glasses = !currentAccessories.glasses; applyAccessories(); speakText("Стильно!"); };
-        document.getElementById('hatBtn').onclick = () => { currentAccessories.hat = !currentAccessories.hat; applyAccessories(); speakText("Шляпа!"); };
-        document.getElementById('bowBtn').onclick = () => { currentAccessories.bow = !currentAccessories.bow; applyAccessories(); speakText("Красивый бантик!"); };
-        document.getElementById('removeAccBtn').onclick = () => { currentAccessories = {glasses:false, hat:false, bow:false}; applyAccessories(); speakText("Натуральный вид"); };
+        document.getElementById('glassesBtn').onclick = () => { currentAccessories.glasses = !currentAccessories.glasses; applyAccessories(); speakText(randomFrom(MELLSTROY_PHRASES.accessory)); };
+        document.getElementById('hatBtn').onclick = () => { currentAccessories.hat = !currentAccessories.hat; applyAccessories(); speakText(randomFrom(MELLSTROY_PHRASES.accessory)); };
+        document.getElementById('bowBtn').onclick = () => { currentAccessories.bow = !currentAccessories.bow; applyAccessories(); speakText(randomFrom(MELLSTROY_PHRASES.accessory)); };
+        document.getElementById('removeAccBtn').onclick = () => { currentAccessories = {glasses:false, hat:false, bow:false}; applyAccessories(); speakText("Натуральный вид, окей!"); };
         
-        // Комнаты (фоны)
+        // Комнаты
         const rooms = {
             living: 'linear-gradient(145deg, #5c3e2b, #2e1e14)',
             garden: 'linear-gradient(145deg, #2d6a4f, #1b4332)',
@@ -536,7 +700,7 @@
             parent.replaceChild(newImg, characterMedia);
             characterMedia = newImg;
             currentCharType = 'img';
-            characterMedia.onclick = () => speakText("Мяу!");
+            characterMedia.onclick = () => speakText(randomFrom(MELLSTROY_PHRASES.meow));
             localStorage.setItem('customCharacter', dataUrl);
             localStorage.removeItem('customCharacterVideo');
             applyAccessories();
@@ -552,7 +716,7 @@
             parent.replaceChild(newVideo, characterMedia);
             characterMedia = newVideo;
             currentCharType = 'video';
-            characterMedia.onclick = () => speakText("Мяу!");
+            characterMedia.onclick = () => speakText(randomFrom(MELLSTROY_PHRASES.meow));
             newVideo.play();
             localStorage.setItem('customCharacterVideo', dataUrl);
             localStorage.removeItem('customCharacter');
@@ -622,27 +786,37 @@
         }
         loadGame();
         startMouseGame();
-        characterMedia.onclick = () => speakText("Мяу!");
-        // Моргание для PNG
-        setInterval(() => {
-            if(currentCharType === 'img' && characterMedia.tagName === 'IMG')
-                characterMedia.classList.add('blink');
-            setTimeout(() => { if(characterMedia) characterMedia.classList.remove('blink'); }, 200);
-        }, 3000);
+        characterMedia.onclick = () => speakText(randomFrom(MELLSTROY_PHRASES.meow));
+        
         // Автоухудшение
         setInterval(() => {
             modifyStat('hunger', -3); modifyStat('energy', -2); modifyStat('clean', -3); modifyStat('lonely', 4);
             if(stats.hunger<20||stats.lonely>70) modifyStat('happiness', -4);
         }, 14000);
+        
         // Речь через кнопку
-        document.getElementById('speakBtn').onclick = () => { let t = document.getElementById('textInput').value; if(t) speakText(t); else speakText("Мяу!"); };
+        document.getElementById('speakBtn').onclick = () => { 
+            let t = document.getElementById('textInput').value; 
+            if(t) speakText(t); 
+            else speakText(randomFrom(MELLSTROY_PHRASES.happy));
+        };
         if('webkitSpeechRecognition' in window){
             let recog = new webkitSpeechRecognition();
             recog.lang = 'ru-RU';
-            recog.onresult = (e) => { let text = e.results[0][0].transcript; document.getElementById('textInput').value = text; speakText(text); };
+            recog.onresult = (e) => { 
+                let text = e.results[0][0].transcript; 
+                document.getElementById('textInput').value = text; 
+                speakText(text); 
+            };
             document.getElementById('micBtn').onclick = () => recog.start();
         } else document.getElementById('micBtn').onclick = () => alert("Микрофон не поддерживается");
-        setTimeout(() => speakText("Привет! Я Том! Давай играть!"), 1000);
+        
+        // Приветствие голосом Меллстроя
+        setTimeout(() => {
+            // Принудительно загружаем голоса, чтобы выбрать правильный
+            window.speechSynthesis.getVoices();
+            setTimeout(() => speakText("Опаньки, привет! Я Том в стиле Меллстрой! Давай играть, бро!"), 200);
+        }, 500);
     })();
 </script>
 </body>

@@ -3,13 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Говорящий питомец</title>
+    <title>Говорящий питомец — WEBM фон и персонаж</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
+        }
+
+        /* видеофон на весь экран */
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            z-index: -2;
+            display: none;
         }
 
         body {
@@ -24,18 +38,21 @@
             align-items: center;
             padding: 20px;
             transition: background-image 0.2s;
+            position: relative;
         }
 
-        /* главный блок — только персонаж и кнопка */
+        /* контейнер — только персонаж + речевой блок + кнопки загрузки */
         .pet-container {
             max-width: 500px;
             width: 100%;
             text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
-        /* зона персонажа */
-        .character-wrapper {
-            background: rgba(255, 245, 210, 0.4);
+        /* рамка вокруг персонажа (общая для img и video) */
+        .character-frame {
+            background: rgba(255, 245, 210, 0.3);
             border-radius: 60px;
             padding: 20px;
             margin-bottom: 25px;
@@ -43,7 +60,7 @@
             box-shadow: 0 12px 25px rgba(0,0,0,0.3);
         }
 
-        #characterImg {
+        #characterMedia {
             width: 260px;
             height: 260px;
             object-fit: contain;
@@ -52,9 +69,10 @@
             filter: drop-shadow(8px 12px 14px rgba(0, 0, 0, 0.3));
             cursor: pointer;
             transition: transform 0.1s ease;
+            border-radius: 40px;
         }
 
-        /* анимация говорения */
+        /* анимация говорения (для статичной картинки) */
         .talking {
             animation: talkShake 0.22s infinite alternate;
         }
@@ -64,7 +82,7 @@
             100% { transform: scale(1.02) translateY(-4px) rotate(1deg); }
         }
 
-        /* панель "Сказать" — только поле + кнопка */
+        /* блок "Сказать" — поле + кнопка */
         .speech-bar {
             display: flex;
             flex-wrap: wrap;
@@ -75,6 +93,7 @@
             padding: 12px 20px;
             backdrop-filter: blur(5px);
             box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
         }
 
         #textInput {
@@ -114,30 +133,56 @@
             box-shadow: 0 2px 0 #b45f1a;
         }
 
-        /* подсказка для перетаскивания — почти незаметна, но нужна для юзабилити */
-        .drag-hint {
-            font-size: 0.65rem;
-            margin-top: 14px;
-            color: rgba(255,245,200,0.7);
-            background: rgba(0,0,0,0.2);
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 40px;
-            backdrop-filter: blur(2px);
+        /* кнопки загрузки файлов */
+        .file-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 5px;
+            flex-wrap: wrap;
+        }
+
+        .file-label {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            padding: 8px 18px;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.1s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid rgba(255,255,200,0.6);
+        }
+
+        .file-label:active {
+            transform: scale(0.96);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .file-label input {
+            display: none;
         }
 
         @media (max-width: 550px) {
-            #characterImg { width: 200px; height: 200px; }
+            #characterMedia { width: 200px; height: 200px; }
             .speak-btn { font-size: 1rem; padding: 0 18px; }
-            .speech-bar { padding: 10px 15px; }
+            .file-label { padding: 5px 14px; font-size: 0.75rem; }
         }
     </style>
 </head>
 <body>
 
+<!-- Видео для фона (скрыто по умолчанию) -->
+<video id="bgVideo" class="bg-video" autoplay loop muted playsinline></video>
+
 <div class="pet-container">
-    <div class="character-wrapper">
-        <img id="characterImg" 
+    <div class="character-frame">
+        <!-- Единый элемент для персонажа: может быть <img> или <video> -->
+        <img id="characterMedia" 
              src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%23F4A261'/%3E%3Ccircle cx='65' cy='80' r='12' fill='white'/%3E%3Ccircle cx='135' cy='80' r='12' fill='white'/%3E%3Ccircle cx='70' cy='82' r='5' fill='black'/%3E%3Ccircle cx='140' cy='82' r='5' fill='black'/%3E%3Cellipse cx='100' cy='115' rx='20' ry='12' fill='%23E76F51'/%3E%3Cpath d='M85 145 Q100 165 115 145' stroke='%238B5A2B' fill='none' stroke-width='4' stroke-linecap='round'/%3E%3Cpolygon points='30,45 45,20 60,45' fill='%23DDA15E'/%3E%3Cpolygon points='140,45 155,20 170,45' fill='%23DDA15E'/%3E%3Ctext x='100' y='180' text-anchor='middle' fill='%235C3A1E' font-size='16' font-weight='bold'%3E🐱 Том%3C/text%3E%3C/svg%3E"
              alt="Питомец" draggable="false">
     </div>
@@ -146,23 +191,73 @@
         <input type="text" id="textInput" placeholder="Напиши фразу..." value="Привет! Я твой друг!">
         <button class="speak-btn" id="speakBtn">🔊 Сказать</button>
     </div>
-    <div class="drag-hint">
-        📂 Перетащи PNG на питомца → новый образ | Перетащи картинку на фон → новый фон
+
+    <div class="file-buttons">
+        <label class="file-label">
+            📁 Загрузить персонажа (PNG / WEBM)
+            <input type="file" id="uploadCharacter" accept="image/png, image/jpeg, image/webp, video/webm">
+        </label>
+        <label class="file-label">
+            🖼️ Загрузить фон (PNG / WEBM)
+            <input type="file" id="uploadBg" accept="image/png, image/jpeg, image/webp, video/webm">
+        </label>
     </div>
 </div>
 
 <script>
     (function(){
-        // --- ЭЛЕМЕНТЫ ---
-        const characterImg = document.getElementById('characterImg');
+        // Элементы
+        const characterContainer = document.getElementById('characterMedia');
         const speakBtn = document.getElementById('speakBtn');
         const textInput = document.getElementById('textInput');
+        const uploadChar = document.getElementById('uploadCharacter');
+        const uploadBg = document.getElementById('uploadBg');
+        const bgVideo = document.getElementById('bgVideo');
+
+        // Текущий тип персонажа: 'img' или 'video'
+        let currentCharType = 'img';
         
-        // --- АНИМАЦИЯ ГОВОРЕНИЯ ---
-        function startTalking() { characterImg.classList.add('talking'); }
-        function stopTalking() { characterImg.classList.remove('talking'); }
+        // Функция для создания нового элемента персонажа (замена)
+        function replaceCharacterWith(newElement) {
+            const parent = characterContainer.parentNode;
+            const old = characterContainer;
+            // копируем классы и стили? проще заменить
+            newElement.id = 'characterMedia';
+            newElement.style.width = old.style.width || '260px';
+            newElement.style.height = old.style.height || '260px';
+            newElement.style.objectFit = 'contain';
+            newElement.style.display = 'block';
+            newElement.style.margin = '0 auto';
+            newElement.style.cursor = 'pointer';
+            newElement.style.filter = 'drop-shadow(8px 12px 14px rgba(0, 0, 0, 0.3))';
+            newElement.style.borderRadius = '40px';
+            // обработчик клика (озвучка)
+            newElement.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const meows = ["Мяу!", "Мур-мяу!", "Приветик!", "Мяяу!", "Здарова!"];
+                const rand = meows[Math.floor(Math.random() * meows.length)];
+                speakText(rand);
+                newElement.style.transform = "scale(1.05)";
+                setTimeout(() => { newElement.style.transform = ""; }, 150);
+            });
+            parent.replaceChild(newElement, old);
+            // обновляем глобальную переменную
+            window.characterMedia = newElement;
+        }
+
+        // Анимация говорения (для img)
+        function startTalking() {
+            if (currentCharType === 'img' && window.characterMedia && window.characterMedia.tagName === 'IMG') {
+                window.characterMedia.classList.add('talking');
+            }
+        }
+        function stopTalking() {
+            if (window.characterMedia && window.characterMedia.tagName === 'IMG') {
+                window.characterMedia.classList.remove('talking');
+            }
+        }
         
-        // --- СИНТЕЗ РЕЧИ ---
+        // Синтез речи
         function speakText(text) {
             if (!text || text.trim() === "") {
                 text = "Мяу? Напиши что-нибудь!";
@@ -182,7 +277,7 @@
             window.speechSynthesis.speak(utterance);
         }
         
-        // --- КНОПКА "СКАЗАТЬ" ---
+        // Кнопка "Сказать"
         speakBtn.addEventListener('click', () => {
             let userText = textInput.value.trim();
             if (userText === "") {
@@ -190,96 +285,161 @@
                 textInput.value = userText;
             }
             speakText(userText);
-            // легкий отклик
-            characterImg.style.transform = "scale(0.98)";
-            setTimeout(() => { characterImg.style.transform = ""; }, 120);
-        });
-        
-        // --- КЛИК НА ПЕРСОНАЖЕ (мяу) ---
-        characterImg.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const meows = ["Мяу!", "Мур-мяу!", "Приветик!", "Мяяу!", "Здарова!"];
-            const rand = meows[Math.floor(Math.random() * meows.length)];
-            speakText(rand);
-            characterImg.style.transform = "scale(1.05)";
-            setTimeout(() => { characterImg.style.transform = ""; }, 150);
-        });
-        
-        // --- ЗАГРУЗКА ПЕРСОНАЖА ЧЕРЕЗ ПЕРЕТАСКИВАНИЕ (Drag & Drop) ---
-        characterImg.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            characterImg.style.opacity = "0.8";
-        });
-        characterImg.addEventListener('dragleave', () => {
-            characterImg.style.opacity = "1";
-        });
-        characterImg.addEventListener('drop', (e) => {
-            e.preventDefault();
-            characterImg.style.opacity = "1";
-            const file = e.dataTransfer.files[0];
-            if (file && (file.type === 'image/png' || file.type === 'image/jpeg' || file.type === 'image/webp')) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    characterImg.src = ev.target.result;
-                    localStorage.setItem('customCharacter', ev.target.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Перетащите PNG, JPEG или WEBP изображение для персонажа");
+            if (window.characterMedia) {
+                window.characterMedia.style.transform = "scale(0.98)";
+                setTimeout(() => { if(window.characterMedia) window.characterMedia.style.transform = ""; }, 120);
             }
         });
         
-        // --- ЗАГРУЗКА ФОНА ЧЕРЕЗ ПЕРЕТАСКИВАНИЕ НА BODY ---
-        document.body.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            document.body.style.opacity = "0.95";
+        // Загрузка персонажа (PNG, JPEG, WEBP, WEBM)
+        uploadChar.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const fileType = file.type;
+            const isVideo = fileType === 'video/webm';
+            const isImage = fileType.startsWith('image/');
+            
+            if (!isVideo && !isImage) {
+                alert("Поддерживаются PNG, JPEG, WEBP и WEBM для персонажа");
+                uploadChar.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const dataUrl = ev.target.result;
+                if (isImage) {
+                    // Создаём img
+                    const newImg = document.createElement('img');
+                    newImg.src = dataUrl;
+                    newImg.alt = "Питомец";
+                    newImg.draggable = false;
+                    replaceCharacterWith(newImg);
+                    currentCharType = 'img';
+                    // сохраняем в localStorage (только картинки, видео не храним)
+                    localStorage.setItem('customCharacter', dataUrl);
+                    localStorage.removeItem('customCharacterVideo');
+                } 
+                else if (isVideo) {
+                    // Создаём video
+                    const newVideo = document.createElement('video');
+                    newVideo.src = dataUrl;
+                    newVideo.autoplay = true;
+                    newVideo.loop = true;
+                    newVideo.muted = true;  // чтобы автоплей работал
+                    newVideo.playsInline = true;
+                    newVideo.style.pointerEvents = 'auto';
+                    replaceCharacterWith(newVideo);
+                    currentCharType = 'video';
+                    newVideo.play().catch(e => console.log("Автоплей видео:", e));
+                    // Видео не сохраняем в localStorage (большой объём), просто запоминаем факт
+                    localStorage.removeItem('customCharacter');
+                    localStorage.setItem('customCharacterVideo', 'true');
+                }
+            };
+            reader.readAsDataURL(file);
+            uploadChar.value = '';
         });
-        document.body.addEventListener('dragleave', () => {
-            document.body.style.opacity = "1";
-        });
-        document.body.addEventListener('drop', (e) => {
-            e.preventDefault();
-            document.body.style.opacity = "1";
-            const file = e.dataTransfer.files[0];
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    document.body.style.backgroundImage = `url(${ev.target.result})`;
+        
+        // Загрузка фона (PNG, JPEG, WEBP, WEBM)
+        uploadBg.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const fileType = file.type;
+            const isVideo = fileType === 'video/webm';
+            const isImage = fileType.startsWith('image/');
+            
+            if (!isVideo && !isImage) {
+                alert("Поддерживаются PNG, JPEG, WEBP и WEBM для фона");
+                uploadBg.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                const dataUrl = ev.target.result;
+                if (isImage) {
+                    // убираем видеофон, показываем картинку через body background
+                    bgVideo.style.display = 'none';
+                    bgVideo.src = '';
+                    document.body.style.backgroundImage = `url(${dataUrl})`;
                     document.body.style.backgroundSize = 'cover';
                     document.body.style.backgroundPosition = 'center';
                     document.body.style.backgroundAttachment = 'fixed';
-                    localStorage.setItem('customBackground', ev.target.result);
-                };
-                reader.readAsDataURL(file);
-            } else {
-                alert("Перетащите изображение для фона (PNG, JPG, WEBP)");
-            }
+                    localStorage.setItem('customBackground', dataUrl);
+                    localStorage.removeItem('customBackgroundVideo');
+                } 
+                else if (isVideo) {
+                    // показываем видеофон
+                    document.body.style.backgroundImage = '';
+                    bgVideo.src = dataUrl;
+                    bgVideo.style.display = 'block';
+                    bgVideo.play().catch(e => console.log("Фон видео автоплей:", e));
+                    localStorage.setItem('customBackgroundVideo', dataUrl);
+                    localStorage.removeItem('customBackground');
+                }
+            };
+            reader.readAsDataURL(file);
+            uploadBg.value = '';
         });
         
-        // --- ВОССТАНОВЛЕНИЕ СОХРАНЁННЫХ ДАННЫХ ---
-        const savedChar = localStorage.getItem('customCharacter');
-        if (savedChar && savedChar.startsWith('data:image')) {
-            characterImg.src = savedChar;
+        // Восстановление сохранённых данных
+        const savedCharImg = localStorage.getItem('customCharacter');
+        const savedCharVideo = localStorage.getItem('customCharacterVideo');
+        if (savedCharImg && savedCharImg.startsWith('data:image')) {
+            const newImg = document.createElement('img');
+            newImg.src = savedCharImg;
+            newImg.alt = "Питомец";
+            newImg.draggable = false;
+            replaceCharacterWith(newImg);
+            currentCharType = 'img';
+        } else if (savedCharVideo === 'true') {
+            // нельзя восстановить само видео из localStorage, но можно показать заглушку
+            // лучше ничего не делать, останется кот по умолчанию
+            localStorage.removeItem('customCharacterVideo');
         }
-        const savedBg = localStorage.getItem('customBackground');
-        if (savedBg && savedBg.startsWith('data:image')) {
-            document.body.style.backgroundImage = `url(${savedBg})`;
+        
+        const savedBgImg = localStorage.getItem('customBackground');
+        const savedBgVideo = localStorage.getItem('customBackgroundVideo');
+        if (savedBgVideo && savedBgVideo.startsWith('data:')) {
+            document.body.style.backgroundImage = '';
+            bgVideo.src = savedBgVideo;
+            bgVideo.style.display = 'block';
+            bgVideo.play().catch(e => console.log);
+        } else if (savedBgImg && savedBgImg.startsWith('data:image')) {
+            bgVideo.style.display = 'none';
+            document.body.style.backgroundImage = `url(${savedBgImg})`;
             document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundPosition = 'center';
             document.body.style.backgroundAttachment = 'fixed';
         }
         
-        // --- ПРИВЕТСТВИЕ ПРИ ЗАГРУЗКЕ (один раз) ---
+        // Приветствие
         setTimeout(() => {
             speakText("Привет! Я твой говорящий друг. Напиши что-нибудь и нажми «Сказать»!");
         }, 400);
         
-        // --- СБРОС АНИМАЦИИ, ЕСЛИ РЕЧЬ ЗАВИСЛА ---
+        // Очистка анимации
         setInterval(() => {
             if (!window.speechSynthesis.speaking && !window.speechSynthesis.pending) {
                 stopTalking();
             }
         }, 300);
+        
+        // На случай, если characterMedia уже существует, но обработчик клика может быть потерян при замене
+        // добавим обработчик на существующий элемент
+        if (window.characterMedia) {
+            window.characterMedia.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const meows = ["Мяу!", "Мур-мяу!", "Приветик!", "Мяяу!", "Здарова!"];
+                const rand = meows[Math.floor(Math.random() * meows.length)];
+                speakText(rand);
+                window.characterMedia.style.transform = "scale(1.05)";
+                setTimeout(() => { if(window.characterMedia) window.characterMedia.style.transform = ""; }, 150);
+            });
+        }
     })();
 </script>
 </body>

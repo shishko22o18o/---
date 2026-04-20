@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Говорящий Том — Полная версия</title>
+    <title>Мой Говорящий Том — Мега-милая версия</title>
     <style>
         * {
             margin: 0;
@@ -13,14 +13,14 @@
         }
 
         :root {
-            --bg-start: #1a2a3a;
-            --bg-end: #0e1a24;
-            --card-bg: rgba(30, 40, 50, 0.75);
-            --text-light: #f0e6d0;
-            --accent: #ffaa44;
-            --accent-dark: #cc7a00;
-            --stat-bg: #2a3a44;
-            --stat-fill: #4caf50;
+            --bg-start: #2a1e2c;
+            --bg-end: #1a0f1c;
+            --card-bg: rgba(45, 35, 55, 0.8);
+            --accent: #ffb347;
+            --accent-dark: #e67e22;
+            --text-light: #fff0dd;
+            --stat-bg: #3a2a3a;
+            --stat-fill: #ffaa66;
         }
 
         body {
@@ -30,12 +30,10 @@
             background-position: center;
             background-attachment: fixed;
             font-family: 'Segoe UI', 'Comic Neue', 'Comic Sans MS', cursive, sans-serif;
-            padding: 20px;
-            transition: background-image 0.2s;
+            padding: 15px;
             color: var(--text-light);
         }
 
-        /* видеофон */
         .bg-video-container {
             position: fixed;
             top: 0;
@@ -48,100 +46,99 @@
         #bgVideo {
             min-width: 100%;
             min-height: 100%;
-            width: auto;
-            height: auto;
             object-fit: cover;
             display: none;
         }
 
-        /* главный контейнер */
         .game-container {
-            max-width: 1300px;
+            max-width: 1400px;
             margin: 0 auto;
             background: var(--card-bg);
-            backdrop-filter: blur(12px);
-            border-radius: 60px;
+            backdrop-filter: blur(15px);
+            border-radius: 70px;
             padding: 20px 25px 30px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.5);
-            border: 2px solid rgba(255,215,150,0.5);
+            box-shadow: 0 30px 50px rgba(0,0,0,0.5);
+            border: 2px solid rgba(255,220,150,0.6);
         }
 
-        /* верхняя панель: статистика */
-        .stats-panel {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 15px;
+        /* статистика */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
             margin-bottom: 25px;
-            background: rgba(0,0,0,0.4);
-            border-radius: 50px;
-            padding: 15px 20px;
+            background: rgba(0,0,0,0.35);
+            border-radius: 60px;
+            padding: 18px 20px;
         }
-        .stat {
-            flex: 1;
-            min-width: 120px;
+        .stat-card {
             text-align: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 40px;
+            padding: 8px;
         }
         .stat-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
+            font-size: 0.85rem;
             letter-spacing: 1px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
         .stat-bar {
             height: 12px;
             background: var(--stat-bg);
             border-radius: 20px;
             overflow: hidden;
-            margin: 5px 0;
         }
         .stat-fill {
             height: 100%;
-            width: 100%;
             background: var(--stat-fill);
+            width: 100%;
             border-radius: 20px;
-            transition: width 0.3s ease;
-        }
-        .stat-value {
-            font-size: 0.8rem;
-            font-weight: bold;
+            transition: width 0.3s;
         }
 
-        /* главная зона: персонаж + действия */
-        .main-area {
+        /* главная зона */
+        .main-flex {
             display: flex;
             flex-wrap: wrap;
             gap: 25px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
-        .character-area {
+        .character-zone {
             flex: 2;
             min-width: 280px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 50px;
-            padding: 20px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 60px;
+            padding: 25px;
             text-align: center;
         }
         #characterMedia {
-            width: 100%;
             max-width: 320px;
+            width: 100%;
             height: auto;
             object-fit: contain;
-            margin: 0 auto;
-            filter: drop-shadow(10px 15px 20px rgba(0,0,0,0.5));
+            filter: drop-shadow(12px 15px 20px rgba(0,0,0,0.5));
             cursor: pointer;
-            border-radius: 40px;
+            border-radius: 50px;
             transition: transform 0.1s;
+            background: rgba(255,240,200,0.1);
         }
         .talk-animation {
             animation: talkShake 0.22s infinite alternate;
         }
         @keyframes talkShake {
             0% { transform: scale(1) translateY(0px); }
-            100% { transform: scale(1.02) translateY(-5px) rotate(1.5deg); }
+            100% { transform: scale(1.02) translateY(-5px) rotate(1deg); }
+        }
+        .blink {
+            animation: blinkAnim 0.2s ease-in-out;
+        }
+        @keyframes blinkAnim {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
-        .action-panel {
+        .actions-panel {
             flex: 1.5;
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
@@ -152,17 +149,17 @@
             background: var(--accent);
             border: none;
             padding: 12px 8px;
-            border-radius: 40px;
+            border-radius: 50px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #2c1a0c;
             cursor: pointer;
-            transition: 0.05s linear;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             box-shadow: 0 5px 0 var(--accent-dark);
+            transition: 0.02s linear;
         }
         .action-btn:active {
             transform: translateY(3px);
@@ -170,10 +167,10 @@
         }
 
         /* речевой блок */
-        .speech-block {
+        .speech-panel {
             background: rgba(0,0,0,0.5);
-            border-radius: 50px;
-            padding: 20px;
+            border-radius: 60px;
+            padding: 18px;
             margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
@@ -183,46 +180,83 @@
         #textInput {
             flex: 3;
             padding: 14px 20px;
-            border-radius: 50px;
+            border-radius: 60px;
             border: none;
             font-size: 1rem;
-            background: #fff2df;
+            background: #fff8ec;
         }
         .speech-btn {
-            background: #3a86ff;
+            background: #6c5ce7;
             border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
+            padding: 12px 24px;
+            border-radius: 60px;
             font-weight: bold;
             color: white;
             cursor: pointer;
             display: inline-flex;
             gap: 8px;
-            align-items: center;
         }
 
-        /* мини-игра */
-        .minigame-area {
-            background: rgba(0,0,0,0.4);
-            border-radius: 40px;
+        /* мини-игры */
+        .minigames-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .game-card {
+            flex: 1;
+            background: rgba(0,0,0,0.5);
+            border-radius: 50px;
             padding: 15px;
-            margin-top: 15px;
             text-align: center;
         }
-        .mouse-game {
+        .mouse-area {
             position: relative;
-            background: #5a3e2b;
-            border-radius: 30px;
-            height: 120px;
+            background: #6b4c3b;
+            height: 110px;
+            border-radius: 40px;
             margin: 10px 0;
             cursor: pointer;
             overflow: hidden;
         }
         #mouseIcon {
             position: absolute;
-            width: 50px;
-            transition: all 0.05s linear;
-            font-size: 3rem;
+            font-size: 2.8rem;
+            cursor: pointer;
+            transition: left 0.08s, top 0.08s;
+        }
+        .fishing-area {
+            background: #2c5a7a;
+            border-radius: 40px;
+            padding: 10px;
+            min-height: 120px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+        .fish {
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        .fish:active { transform: scale(0.9); }
+
+        /* аксессуары и комнаты */
+        .accessories-row, .rooms-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 15px 0 10px;
+        }
+        .mini-btn {
+            background: rgba(255,200,100,0.8);
+            border: none;
+            border-radius: 50px;
+            padding: 8px 18px;
+            font-weight: bold;
             cursor: pointer;
         }
         .upload-row {
@@ -237,15 +271,12 @@
             padding: 8px 18px;
             border-radius: 40px;
             cursor: pointer;
-            font-size: 0.9rem;
         }
-        .file-label input {
-            display: none;
-        }
+        .file-label input { display: none; }
 
         @media (max-width: 800px) {
             .game-container { padding: 15px; }
-            .action-panel { grid-template-columns: repeat(2, 1fr); }
+            .actions-panel { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -254,292 +285,270 @@
     <video id="bgVideo" autoplay loop muted playsinline></video>
 </div>
 <div class="game-container">
-    <div class="stats-panel">
-        <div class="stat"><div class="stat-label">🍎 Голод</div><div class="stat-bar"><div class="stat-fill" id="hungerFill" style="width: 80%"></div></div><div class="stat-value" id="hungerVal">80%</div></div>
-        <div class="stat"><div class="stat-label">😊 Счастье</div><div class="stat-bar"><div class="stat-fill" id="happyFill" style="width: 80%"></div></div><div class="stat-value" id="happyVal">80%</div></div>
-        <div class="stat"><div class="stat-label">⚡ Энергия</div><div class="stat-bar"><div class="stat-fill" id="energyFill" style="width: 80%"></div></div><div class="stat-value" id="energyVal">80%</div></div>
-        <div class="stat"><div class="stat-label">🧼 Чистота</div><div class="stat-bar"><div class="stat-fill" id="cleanFill" style="width: 80%"></div></div><div class="stat-value" id="cleanVal">80%</div></div>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-label">🍎 Голод</div><div class="stat-bar"><div class="stat-fill" id="hungerFill"></div></div><span id="hungerVal">0%</span></div>
+        <div class="stat-card"><div class="stat-label">😊 Счастье</div><div class="stat-bar"><div class="stat-fill" id="happyFill"></div></div><span id="happyVal">0%</span></div>
+        <div class="stat-card"><div class="stat-label">⚡ Энергия</div><div class="stat-bar"><div class="stat-fill" id="energyFill"></div></div><span id="energyVal">0%</span></div>
+        <div class="stat-card"><div class="stat-label">🧼 Чистота</div><div class="stat-bar"><div class="stat-fill" id="cleanFill"></div></div><span id="cleanVal">0%</span></div>
+        <div class="stat-card"><div class="stat-label">💔 Одиночество</div><div class="stat-bar"><div class="stat-fill" id="lonelyFill"></div></div><span id="lonelyVal">0%</span></div>
     </div>
 
-    <div class="main-area">
-        <div class="character-area">
-            <img id="characterMedia" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%23F4A261'/%3E%3Ccircle cx='65' cy='80' r='12' fill='white'/%3E%3Ccircle cx='135' cy='80' r='12' fill='white'/%3E%3Ccircle cx='70' cy='82' r='5' fill='black'/%3E%3Ccircle cx='140' cy='82' r='5' fill='black'/%3E%3Cellipse cx='100' cy='115' rx='20' ry='12' fill='%23E76F51'/%3E%3Cpath d='M85 145 Q100 165 115 145' stroke='%238B5A2B' fill='none' stroke-width='4' stroke-linecap='round'/%3E%3Cpolygon points='30,45 45,20 60,45' fill='%23DDA15E'/%3E%3Cpolygon points='140,45 155,20 170,45' fill='%23DDA15E'/%3E%3Ctext x='100' y='180' text-anchor='middle' fill='%235C3A1E' font-size='16' font-weight='bold'%3E🐱 Том%3C/text%3E%3C/svg%3E" alt="Питомец" draggable="false">
+    <div class="main-flex">
+        <div class="character-zone">
+            <img id="characterMedia" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='90' fill='%23F4A261'/%3E%3Ccircle cx='65' cy='80' r='12' fill='white'/%3E%3Ccircle cx='135' cy='80' r='12' fill='white'/%3E%3Ccircle cx='70' cy='82' r='5' fill='black'/%3E%3Ccircle cx='140' cy='82' r='5' fill='black'/%3E%3Cellipse cx='100' cy='115' rx='20' ry='12' fill='%23E76F51'/%3E%3Cpath d='M85 145 Q100 165 115 145' stroke='%238B5A2B' fill='none' stroke-width='4' stroke-linecap='round'/%3E%3Cpolygon points='30,45 45,20 60,45' fill='%23DDA15E'/%3E%3Cpolygon points='140,45 155,20 170,45' fill='%23DDA15E'/%3E%3Ctext x='100' y='180' text-anchor='middle' fill='%235C3A1E' font-size='16' font-weight='bold'%3E😺 Том%3C/text%3E%3C/svg%3E" alt="Питомец">
         </div>
-        <div class="action-panel">
+        <div class="actions-panel">
             <button class="action-btn" id="feedApple">🍎 Яблоко</button>
             <button class="action-btn" id="feedFish">🐟 Рыба</button>
             <button class="action-btn" id="feedMilk">🥛 Молоко</button>
+            <button class="action-btn" id="feedCookie">🍪 Печенье</button>
+            <button class="action-btn" id="feedIce">🍦 Мороженое</button>
             <button class="action-btn" id="petBtn">🤚 Погладить</button>
-            <button class="action-btn" id="playBall">🎾 Играть (мяч)</button>
-            <button class="action-btn" id="playMouse">🐭 Играть (мышь)</button>
-            <button class="action-btn" id="sleepBtn">😴 Уложить спать</button>
-            <button class="action-btn" id="cleanBtn">🧽 Убрать лоток</button>
+            <button class="action-btn" id="scratchBtn">🐾 Почесать</button>
+            <button class="action-btn" id="brushBtn">🪮 Расчесать</button>
+            <button class="action-btn" id="playBall">🎾 Мяч</button>
+            <button class="action-btn" id="laserBtn">🔦 Лазер</button>
+            <button class="action-btn" id="sleepBtn">😴 Спать</button>
+            <button class="action-btn" id="cleanBtn">🧽 Лоток</button>
         </div>
     </div>
 
-    <div class="speech-block">
-        <input type="text" id="textInput" placeholder="Напиши что-нибудь..." value="Привет, Том!">
+    <div class="speech-panel">
+        <input type="text" id="textInput" placeholder="Скажи что-нибудь милое..." value="Привет, Том! Ты мой любимый!">
         <button class="speech-btn" id="speakBtn">🔊 Сказать</button>
         <button class="speech-btn" id="micBtn">🎤 Микрофон</button>
     </div>
 
-    <div class="minigame-area">
-        <div>🐁 Поймай мышь! (кликни на неё)</div>
-        <div class="mouse-game" id="mouseGameArea">
-            <div id="mouseIcon" style="position: absolute; left: 20px; top: 30px;">🐭</div>
+    <div class="minigames-row">
+        <div class="game-card">
+            <div>🐁 Поймай мышь!</div>
+            <div class="mouse-area" id="mouseGameArea">
+                <div id="mouseIcon" style="left: 20px; top: 30px;">🐭</div>
+            </div>
+            <div id="mouseScore">Мышей: 0</div>
         </div>
-        <div id="mouseScore">Поймано мышей: 0</div>
+        <div class="game-card">
+            <div>🐟 Рыбалка (кликни на рыбку)</div>
+            <div class="fishing-area" id="fishingArea">
+                <span class="fish">🐟</span><span class="fish">🐠</span><span class="fish">🐡</span>
+            </div>
+            <div id="fishScore">Рыбок: 0</div>
+        </div>
+    </div>
+
+    <div class="accessories-row">
+        <button class="mini-btn" id="glassesBtn">👓 Очки</button>
+        <button class="mini-btn" id="hatBtn">🎩 Шляпа</button>
+        <button class="mini-btn" id="bowBtn">🎀 Бантик</button>
+        <button class="mini-btn" id="removeAccBtn">❌ Снять всё</button>
+    </div>
+    <div class="rooms-row">
+        <button class="mini-btn" id="roomLiving">🏠 Гостиная</button>
+        <button class="mini-btn" id="roomGarden">🌿 Сад</button>
+        <button class="mini-btn" id="roomSpace">🚀 Космос</button>
+        <button class="mini-btn" id="roomUnderwater">🌊 Под водой</button>
+        <button class="mini-btn" id="roomNight">🌙 Ночь</button>
     </div>
 
     <div class="upload-row">
-        <label class="file-label">📁 Персонаж (PNG/WEBM) <input type="file" id="uploadCharacter" accept="image/png, image/jpeg, image/webp, video/webm"></label>
-        <label class="file-label">🖼️ Фон (PNG/WEBM) <input type="file" id="uploadBg" accept="image/png, image/jpeg, image/webp, video/webm"></label>
-        <button class="file-label" id="resetDefault">🌀 Сбросить всё</button>
+        <label class="file-label">📁 Персонаж (PNG/WEBM) <input type="file" id="uploadCharacter" accept="image/png,image/jpeg,image/webp,video/webm"></label>
+        <label class="file-label">🖼️ Фон (PNG/WEBM) <input type="file" id="uploadBg" accept="image/png,image/jpeg,image/webp,video/webm"></label>
+        <button class="file-label" id="resetAll">🌀 Сброс всего</button>
     </div>
 </div>
 
 <script>
     (function(){
-        // --- Состояние питомца ---
-        let stats = {
-            hunger: 80,
-            happiness: 80,
-            energy: 80,
-            clean: 80
-        };
-        let mouseScore = 0;
-        let gameInterval;
+        // Состояние питомца
+        let stats = { hunger: 80, happiness: 80, energy: 80, clean: 80, lonely: 20 };
+        let mouseCaught = 0, fishCaught = 0;
+        let currentAccessories = { glasses: false, hat: false, bow: false };
         let currentCharType = 'img';
         let characterMedia = document.getElementById('characterMedia');
-        let talkingAnimation = false;
-        let speechSynth = window.speechSynthesis;
-
-        // DOM элементы
-        const hungerFill = document.getElementById('hungerFill');
-        const hungerVal = document.getElementById('hungerVal');
-        const happyFill = document.getElementById('happyFill');
-        const happyVal = document.getElementById('happyVal');
-        const energyFill = document.getElementById('energyFill');
-        const energyVal = document.getElementById('energyVal');
-        const cleanFill = document.getElementById('cleanFill');
-        const cleanVal = document.getElementById('cleanVal');
-        const textInput = document.getElementById('textInput');
-        const speakBtn = document.getElementById('speakBtn');
-        const micBtn = document.getElementById('micBtn');
-        const mouseIcon = document.getElementById('mouseIcon');
-        const mouseGameArea = document.getElementById('mouseGameArea');
-        const mouseScoreSpan = document.getElementById('mouseScore');
+        let talkInterval = null;
         
-        // Обновление UI статистики
-        function updateStatsUI() {
-            hungerFill.style.width = stats.hunger + '%';
-            hungerVal.innerText = stats.hunger + '%';
-            happyFill.style.width = stats.happiness + '%';
-            happyVal.innerText = stats.happiness + '%';
-            energyFill.style.width = stats.energy + '%';
-            energyVal.innerText = stats.energy + '%';
-            cleanFill.style.width = stats.clean + '%';
-            cleanVal.innerText = stats.clean + '%';
+        // DOM элементы
+        const hungerFill = document.getElementById('hungerFill'), hungerVal = document.getElementById('hungerVal');
+        const happyFill = document.getElementById('happyFill'), happyVal = document.getElementById('happyVal');
+        const energyFill = document.getElementById('energyFill'), energyVal = document.getElementById('energyVal');
+        const cleanFill = document.getElementById('cleanFill'), cleanVal = document.getElementById('cleanVal');
+        const lonelyFill = document.getElementById('lonelyFill'), lonelyVal = document.getElementById('lonelyVal');
+        const mouseScoreSpan = document.getElementById('mouseScore');
+        const fishScoreSpan = document.getElementById('fishScore');
+        
+        function updateUI() {
+            hungerFill.style.width = stats.hunger+'%'; hungerVal.innerText = stats.hunger+'%';
+            happyFill.style.width = stats.happiness+'%'; happyVal.innerText = stats.happiness+'%';
+            energyFill.style.width = stats.energy+'%'; energyVal.innerText = stats.energy+'%';
+            cleanFill.style.width = stats.clean+'%'; cleanVal.innerText = stats.clean+'%';
+            lonelyFill.style.width = stats.lonely+'%'; lonelyVal.innerText = stats.lonely+'%';
+            mouseScoreSpan.innerText = `Мышей: ${mouseCaught}`;
+            fishScoreSpan.innerText = `Рыбок: ${fishCaught}`;
             saveGame();
         }
-
-        // Изменение статов с ограничением
         function modifyStat(stat, delta) {
             let newVal = stats[stat] + delta;
             if (newVal > 100) newVal = 100;
             if (newVal < 0) newVal = 0;
             stats[stat] = newVal;
-            updateStatsUI();
+            updateUI();
+            if (stats.hunger < 20 || stats.lonely > 70) speakRandomSad();
+            else if (stats.happiness > 70) speakRandomHappy();
         }
-
-        // Анимация говорения
-        function startTalking() {
-            if (currentCharType === 'img' && characterMedia && characterMedia.tagName === 'IMG') {
-                characterMedia.classList.add('talk-animation');
-                talkingAnimation = true;
-            }
-        }
-        function stopTalking() {
-            if (characterMedia && characterMedia.tagName === 'IMG') {
-                characterMedia.classList.remove('talk-animation');
-                talkingAnimation = false;
-            }
-        }
-
-        // Звуки (используем Web Audio для простоты)
+        function speakRandomHappy() { speakText(["Мурр!", "Как хорошо!", "Я счастлив!", "Люблю тебя!"]); }
+        function speakRandomSad() { speakText(["Мне грустно...", "Покорми меня!", "Поиграй со мной!"]); }
+        
+        // Звуки (web audio)
         function playSound(type) {
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                oscillator.connect(gain);
-                gain.connect(audioCtx.destination);
-                oscillator.type = 'sine';
-                let freq = 440;
-                let duration = 0.2;
-                if (type === 'meow') { freq = 660; duration = 0.25; gain.gain.value = 0.3; }
-                if (type === 'eat') { freq = 880; duration = 0.15; gain.gain.value = 0.2; }
-                if (type === 'play') { freq = 1046; duration = 0.1; gain.gain.value = 0.25; }
-                oscillator.frequency.value = freq;
-                gain.gain.exponentialRampToValueAtTime(0.00001, audioCtx.currentTime + duration);
-                oscillator.start();
-                oscillator.stop(audioCtx.currentTime + duration);
-                audioCtx.resume();
-            } catch(e) { console.log("audio error"); }
+                let ctx = new (window.AudioContext || window.webkitAudioContext)();
+                let osc = ctx.createOscillator();
+                let gain = ctx.createGain();
+                osc.connect(gain); gain.connect(ctx.destination);
+                osc.type = 'sine';
+                let freq = 440, dur = 0.2;
+                if(type==='meow'){freq=660;dur=0.25;gain.gain.value=0.3;}
+                if(type==='eat'){freq=880;dur=0.15;gain.gain.value=0.2;}
+                if(type==='play'){freq=1046;dur=0.1;gain.gain.value=0.25;}
+                if(type==='clean'){freq=554;dur=0.2;}
+                osc.frequency.value = freq;
+                gain.gain.exponentialRampToValueAtTime(0.00001, ctx.currentTime+dur);
+                osc.start(); osc.stop(ctx.currentTime+dur);
+                ctx.resume();
+            } catch(e) {}
         }
-
-        // Речь
-        function speakText(text) {
-            if (!text || text.trim() === "") text = "Мяу!";
-            if (speechSynth.speaking || speechSynth.pending) speechSynth.cancel();
-            stopTalking();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'ru-RU';
-            utterance.rate = 0.95;
-            utterance.pitch = 1.2;
-            utterance.onstart = startTalking;
-            utterance.onend = stopTalking;
-            utterance.onerror = stopTalking;
-            speechSynth.speak(utterance);
-            // при разговоре чуть повышаем счастье
-            modifyStat('happiness', 1);
-        }
-
-        // Действия
-        function feed(energyDelta) {
-            modifyStat('hunger', energyDelta);
-            modifyStat('happiness', 3);
-            playSound('eat');
-            speakText(["Ням-ням!", "Вкусно!", "Спасибо!"][Math.floor(Math.random()*3)]);
-        }
-        function pet() {
-            modifyStat('happiness', 8);
-            modifyStat('energy', 2);
-            playSound('meow');
-            speakText(["Мурр!", "Приятно!", "Спасибо!"][Math.floor(Math.random()*3)]);
-        }
-        function playGame(energyCost = 5) {
-            if (stats.energy >= energyCost) {
-                modifyStat('energy', -energyCost);
-                modifyStat('happiness', 10);
-                modifyStat('hunger', -2);
-                playSound('play');
-                speakText(["Весело!", "Играем!", "Ура!"][Math.floor(Math.random()*3)]);
-            } else {
-                speakText("Я очень устал... дай поспать.");
+        
+        // Речь + анимация
+        function startTalkingAnim() {
+            if (currentCharType === 'img' && characterMedia && characterMedia.tagName === 'IMG') {
+                characterMedia.classList.add('talk-animation');
             }
         }
-        function sleep() {
-            modifyStat('energy', 25);
-            modifyStat('hunger', -3);
+        function stopTalkingAnim() {
+            if (characterMedia && characterMedia.tagName === 'IMG') characterMedia.classList.remove('talk-animation');
+        }
+        function speakText(textArr) {
+            let text = Array.isArray(textArr) ? textArr[Math.floor(Math.random()*textArr.length)] : textArr;
+            if (!text) text = "Мяу!";
+            if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
+            stopTalkingAnim();
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'ru-RU'; utterance.rate = 0.95; utterance.pitch = 1.3;
+            utterance.onstart = startTalkingAnim;
+            utterance.onend = stopTalkingAnim;
+            window.speechSynthesis.speak(utterance);
+            modifyStat('lonely', -5);
             modifyStat('happiness', 2);
-            speakText("Ззз... Мур...");
         }
-        function clean() {
-            modifyStat('clean', 30);
-            modifyStat('happiness', 5);
-            speakText("Чистота!");
-        }
-
+        
+        // Действия
+        function feed(amount) { modifyStat('hunger', amount); modifyStat('happiness', 4); playSound('eat'); speakText(["Ням!", "Вкуснятина!", "Спасибо!"]); }
+        function pet() { modifyStat('happiness', 10); modifyStat('lonely', -8); playSound('meow'); speakText(["Мурр!", "Люблю!", "Ещё!"]); }
+        function play(energyCost) { if(stats.energy>=energyCost){ modifyStat('energy', -energyCost); modifyStat('happiness', 12); modifyStat('hunger', -2); playSound('play'); speakText(["Весело!", "Класс!", "Играем!"]);} else speakText("Я устал...");}
+        function sleep() { modifyStat('energy', 30); modifyStat('happiness', 3); speakText("Ззз..."); }
+        function cleanPet() { modifyStat('clean', 35); modifyStat('happiness', 5); playSound('clean'); speakText("Чисто!");}
+        
+        document.getElementById('feedApple').onclick=()=>feed(12);
+        document.getElementById('feedFish').onclick=()=>feed(18);
+        document.getElementById('feedMilk').onclick=()=>feed(10);
+        document.getElementById('feedCookie').onclick=()=>feed(8);
+        document.getElementById('feedIce').onclick=()=>feed(6);
+        document.getElementById('petBtn').onclick=()=>pet();
+        document.getElementById('scratchBtn').onclick=()=>{ modifyStat('happiness',8); playSound('meow'); speakText("Мурлыкает"); };
+        document.getElementById('brushBtn').onclick=()=>{ modifyStat('happiness',6); modifyStat('clean',10); speakText("Красивый!");};
+        document.getElementById('playBall').onclick=()=>play(7);
+        document.getElementById('laserBtn').onclick=()=>play(5);
+        document.getElementById('sleepBtn').onclick=()=>sleep();
+        document.getElementById('cleanBtn').onclick=()=>cleanPet();
+        
         // Мини-игра мышь
         let mouseInterval;
         function startMouseGame() {
-            if (mouseInterval) clearInterval(mouseInterval);
+            if(mouseInterval) clearInterval(mouseInterval);
             mouseInterval = setInterval(() => {
-                if (!mouseGameArea) return;
-                const maxX = mouseGameArea.clientWidth - 50;
-                const maxY = mouseGameArea.clientHeight - 50;
-                const x = Math.random() * Math.max(10, maxX);
-                const y = Math.random() * Math.max(10, maxY);
-                mouseIcon.style.left = x + 'px';
-                mouseIcon.style.top = y + 'px';
-            }, 800);
+                let area = document.getElementById('mouseGameArea');
+                if(area){
+                    let maxX = area.clientWidth - 60;
+                    let maxY = area.clientHeight - 60;
+                    let x = Math.random() * Math.max(20, maxX);
+                    let y = Math.random() * Math.max(20, maxY);
+                    document.getElementById('mouseIcon').style.left = x+'px';
+                    document.getElementById('mouseIcon').style.top = y+'px';
+                }
+            }, 900);
         }
-        mouseIcon.addEventListener('click', (e) => {
+        document.getElementById('mouseIcon').onclick = (e) => {
             e.stopPropagation();
-            mouseScore++;
-            mouseScoreSpan.innerText = `Поймано мышей: ${mouseScore}`;
-            modifyStat('happiness', 5);
-            modifyStat('energy', -2);
-            playSound('play');
-            speakText("Поймал!");
-            // перекинуть мышь
-            const x = Math.random() * (mouseGameArea.clientWidth - 50);
-            const y = Math.random() * (mouseGameArea.clientHeight - 50);
-            mouseIcon.style.left = x + 'px';
-            mouseIcon.style.top = y + 'px';
-            saveGame();
-        });
-
-        // Автоуменьшение статов каждые 15 секунд
-        setInterval(() => {
-            modifyStat('hunger', -3);
-            modifyStat('energy', -2);
-            modifyStat('clean', -4);
-            if (stats.hunger < 20 || stats.energy < 20) modifyStat('happiness', -3);
-            else modifyStat('happiness', 1);
-        }, 15000);
-
-        // Привязка кнопок
-        document.getElementById('feedApple').onclick = () => feed(12);
-        document.getElementById('feedFish').onclick = () => feed(18);
-        document.getElementById('feedMilk').onclick = () => feed(10);
-        document.getElementById('petBtn').onclick = () => pet();
-        document.getElementById('playBall').onclick = () => playGame(6);
-        document.getElementById('playMouse').onclick = () => playGame(8);
-        document.getElementById('sleepBtn').onclick = () => sleep();
-        document.getElementById('cleanBtn').onclick = () => clean();
-
-        // Речь с текста
-        speakBtn.onclick = () => {
-            let txt = textInput.value.trim();
-            if (!txt) txt = "Мяу!";
-            speakText(txt);
+            mouseCaught++; modifyStat('happiness', 8); modifyStat('energy', -2); playSound('play');
+            speakText(["Поймал!", "Быстрая мышь!", "Ещё!"]);
+            updateUI();
         };
-        // Микрофон
-        let recognition;
-        if ('webkitSpeechRecognition' in window) {
-            recognition = new webkitSpeechRecognition();
-            recognition.lang = 'ru-RU';
-            recognition.onresult = (e) => {
-                let transcript = e.results[0][0].transcript;
-                textInput.value = transcript;
-                speakText(transcript);
-            };
-            micBtn.onclick = () => recognition.start();
-        } else {
-            micBtn.onclick = () => alert("Ваш браузер не поддерживает микрофон");
+        // Рыбалка
+        const fishingArea = document.getElementById('fishingArea');
+        fishingArea.querySelectorAll('.fish').forEach(fish => {
+            fish.onclick = () => { fishCaught++; modifyStat('happiness', 5); modifyStat('hunger', -1); speakText("Рыбка!"); updateUI(); };
+        });
+        
+        // Аксессуары (добавляем поверх картинки)
+        function applyAccessories() {
+            let img = characterMedia;
+            if(img.tagName !== 'IMG') return;
+            let style = '';
+            if(currentAccessories.glasses) style += '👓 ';
+            if(currentAccessories.hat) style += '🎩 ';
+            if(currentAccessories.bow) style += '🎀 ';
+            img.style.filter = 'drop-shadow(0 0 5px gold)';
+            if(style) img.setAttribute('alt', style);
+            else img.style.filter = '';
         }
-
-        // Загрузка персонажа (PNG / WEBM)
+        document.getElementById('glassesBtn').onclick = () => { currentAccessories.glasses = !currentAccessories.glasses; applyAccessories(); speakText("Стильно!"); };
+        document.getElementById('hatBtn').onclick = () => { currentAccessories.hat = !currentAccessories.hat; applyAccessories(); speakText("Шляпа!"); };
+        document.getElementById('bowBtn').onclick = () => { currentAccessories.bow = !currentAccessories.bow; applyAccessories(); speakText("Красивый бантик!"); };
+        document.getElementById('removeAccBtn').onclick = () => { currentAccessories = {glasses:false, hat:false, bow:false}; applyAccessories(); speakText("Натуральный вид"); };
+        
+        // Комнаты (фоны)
+        const rooms = {
+            living: 'linear-gradient(145deg, #5c3e2b, #2e1e14)',
+            garden: 'linear-gradient(145deg, #2d6a4f, #1b4332)',
+            space: 'radial-gradient(circle at 30% 10%, #0a0f2a, #000)',
+            underwater: 'linear-gradient(145deg, #0077be, #003d66)',
+            night: 'linear-gradient(145deg, #1e1b2e, #0a0815)'
+        };
+        function setRoom(roomKey) {
+            document.body.style.backgroundImage = rooms[roomKey];
+            document.body.style.backgroundSize = 'cover';
+            localStorage.setItem('currentRoom', roomKey);
+        }
+        document.getElementById('roomLiving').onclick = () => setRoom('living');
+        document.getElementById('roomGarden').onclick = () => setRoom('garden');
+        document.getElementById('roomSpace').onclick = () => setRoom('space');
+        document.getElementById('roomUnderwater').onclick = () => setRoom('underwater');
+        document.getElementById('roomNight').onclick = () => setRoom('night');
+        
+        // Загрузка персонажа и фона
         function setCharacterAsImage(dataUrl) {
-            const newImg = document.createElement('img');
+            let newImg = document.createElement('img');
             newImg.id = 'characterMedia';
             newImg.src = dataUrl;
-            newImg.style.width = '100%';
-            newImg.style.maxWidth = '320px';
-            newImg.style.height = 'auto';
-            newImg.style.objectFit = 'contain';
+            newImg.style.maxWidth = '320px'; newImg.style.width = '100%';
             newImg.style.cursor = 'pointer';
-            const parent = characterMedia.parentNode;
+            let parent = characterMedia.parentNode;
             parent.replaceChild(newImg, characterMedia);
             characterMedia = newImg;
             currentCharType = 'img';
             characterMedia.onclick = () => speakText("Мяу!");
             localStorage.setItem('customCharacter', dataUrl);
             localStorage.removeItem('customCharacterVideo');
+            applyAccessories();
         }
         function setCharacterAsVideo(dataUrl) {
-            const newVideo = document.createElement('video');
+            let newVideo = document.createElement('video');
             newVideo.id = 'characterMedia';
             newVideo.src = dataUrl;
-            newVideo.autoplay = true;
-            newVideo.loop = true;
-            newVideo.muted = true;
-            newVideo.style.width = '100%';
-            newVideo.style.maxWidth = '320px';
+            newVideo.autoplay = true; newVideo.loop = true; newVideo.muted = true;
+            newVideo.style.maxWidth = '320px'; newVideo.style.width = '100%';
             newVideo.style.cursor = 'pointer';
-            const parent = characterMedia.parentNode;
+            let parent = characterMedia.parentNode;
             parent.replaceChild(newVideo, characterMedia);
             characterMedia = newVideo;
             currentCharType = 'video';
@@ -549,84 +558,91 @@
             localStorage.removeItem('customCharacter');
         }
         document.getElementById('uploadCharacter').onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const isVideo = file.type === 'video/webm';
-            const isImage = file.type.startsWith('image/');
-            if (!isVideo && !isImage) { alert("Нужен PNG/JPEG/WEBP или WEBM"); return; }
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                if (isImage) setCharacterAsImage(ev.target.result);
-                else setCharacterAsVideo(ev.target.result);
-            };
+            let file = e.target.files[0];
+            if(!file) return;
+            let isVideo = file.type === 'video/webm';
+            let isImage = file.type.startsWith('image/');
+            if(!isVideo && !isImage) { alert("PNG/JPEG/WEBP или WEBM"); return; }
+            let reader = new FileReader();
+            reader.onload = (ev) => { if(isImage) setCharacterAsImage(ev.target.result); else setCharacterAsVideo(ev.target.result); };
             reader.readAsDataURL(file);
         };
-        // Фон
         const bgVideo = document.getElementById('bgVideo');
         document.getElementById('uploadBg').onchange = (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const isVideo = file.type === 'video/webm';
-            const isImage = file.type.startsWith('image/');
-            const reader = new FileReader();
+            let file = e.target.files[0];
+            let reader = new FileReader();
             reader.onload = (ev) => {
-                if (isImage) {
+                if(file.type.startsWith('image/')){
                     bgVideo.style.display = 'none';
                     document.body.style.backgroundImage = `url(${ev.target.result})`;
                     document.body.style.backgroundSize = 'cover';
-                    localStorage.setItem('customBackground', ev.target.result);
+                    localStorage.setItem('customBackgroundImg', ev.target.result);
                     localStorage.removeItem('customBackgroundVideo');
-                } else {
+                } else if(file.type === 'video/webm'){
                     document.body.style.backgroundImage = '';
                     bgVideo.src = ev.target.result;
                     bgVideo.style.display = 'block';
                     bgVideo.play();
                     localStorage.setItem('customBackgroundVideo', ev.target.result);
-                    localStorage.removeItem('customBackground');
+                    localStorage.removeItem('customBackgroundImg');
                 }
             };
             reader.readAsDataURL(file);
         };
-        // Сброс
-        document.getElementById('resetDefault').onclick = () => {
-            localStorage.clear();
-            location.reload();
-        };
-
+        document.getElementById('resetAll').onclick = () => { localStorage.clear(); location.reload(); };
+        
         // Сохранение/загрузка
         function saveGame() {
             localStorage.setItem('tomStats', JSON.stringify(stats));
-            localStorage.setItem('mouseScore', mouseScore);
+            localStorage.setItem('mouseCaught', mouseCaught);
+            localStorage.setItem('fishCaught', fishCaught);
+            localStorage.setItem('accessories', JSON.stringify(currentAccessories));
         }
         function loadGame() {
-            const savedStats = localStorage.getItem('tomStats');
-            if (savedStats) {
-                stats = JSON.parse(savedStats);
-                updateStatsUI();
-            }
-            const savedScore = localStorage.getItem('mouseScore');
-            if (savedScore) mouseScore = parseInt(savedScore);
-            mouseScoreSpan.innerText = `Поймано мышей: ${mouseScore}`;
-            const savedCharImg = localStorage.getItem('customCharacter');
-            const savedCharVideo = localStorage.getItem('customCharacterVideo');
-            if (savedCharImg && savedCharImg.startsWith('data:image')) setCharacterAsImage(savedCharImg);
-            else if (savedCharVideo && savedCharVideo.startsWith('data:video/webm')) setCharacterAsVideo(savedCharVideo);
-            const savedBgImg = localStorage.getItem('customBackground');
-            const savedBgVideo = localStorage.getItem('customBackgroundVideo');
-            if (savedBgVideo && savedBgVideo.startsWith('data:video/webm')) {
-                document.body.style.backgroundImage = '';
-                bgVideo.src = savedBgVideo;
-                bgVideo.style.display = 'block';
-                bgVideo.play();
-            } else if (savedBgImg && savedBgImg.startsWith('data:image')) {
-                bgVideo.style.display = 'none';
+            let saved = localStorage.getItem('tomStats');
+            if(saved) { stats = JSON.parse(saved); updateUI(); }
+            mouseCaught = parseInt(localStorage.getItem('mouseCaught')) || 0;
+            fishCaught = parseInt(localStorage.getItem('fishCaught')) || 0;
+            let acc = localStorage.getItem('accessories');
+            if(acc) { currentAccessories = JSON.parse(acc); applyAccessories(); }
+            updateUI();
+            let savedCharImg = localStorage.getItem('customCharacter');
+            let savedCharVideo = localStorage.getItem('customCharacterVideo');
+            if(savedCharImg && savedCharImg.startsWith('data:image')) setCharacterAsImage(savedCharImg);
+            else if(savedCharVideo && savedCharVideo.startsWith('data:video/webm')) setCharacterAsVideo(savedCharVideo);
+            let savedBgImg = localStorage.getItem('customBackgroundImg');
+            let savedBgVideo = localStorage.getItem('customBackgroundVideo');
+            if(savedBgVideo && savedBgVideo.startsWith('data:video/webm')){
+                bgVideo.src = savedBgVideo; bgVideo.style.display = 'block'; bgVideo.play();
+            } else if(savedBgImg && savedBgImg.startsWith('data:image')){
                 document.body.style.backgroundImage = `url(${savedBgImg})`;
             }
+            let room = localStorage.getItem('currentRoom');
+            if(room && rooms[room]) setRoom(room);
         }
         loadGame();
         startMouseGame();
         characterMedia.onclick = () => speakText("Мяу!");
-        setTimeout(() => speakText("Привет! Я Том! Поиграем?"), 800);
+        // Моргание для PNG
+        setInterval(() => {
+            if(currentCharType === 'img' && characterMedia.tagName === 'IMG')
+                characterMedia.classList.add('blink');
+            setTimeout(() => { if(characterMedia) characterMedia.classList.remove('blink'); }, 200);
+        }, 3000);
+        // Автоухудшение
+        setInterval(() => {
+            modifyStat('hunger', -3); modifyStat('energy', -2); modifyStat('clean', -3); modifyStat('lonely', 4);
+            if(stats.hunger<20||stats.lonely>70) modifyStat('happiness', -4);
+        }, 14000);
+        // Речь через кнопку
+        document.getElementById('speakBtn').onclick = () => { let t = document.getElementById('textInput').value; if(t) speakText(t); else speakText("Мяу!"); };
+        if('webkitSpeechRecognition' in window){
+            let recog = new webkitSpeechRecognition();
+            recog.lang = 'ru-RU';
+            recog.onresult = (e) => { let text = e.results[0][0].transcript; document.getElementById('textInput').value = text; speakText(text); };
+            document.getElementById('micBtn').onclick = () => recog.start();
+        } else document.getElementById('micBtn').onclick = () => alert("Микрофон не поддерживается");
+        setTimeout(() => speakText("Привет! Я Том! Давай играть!"), 1000);
     })();
 </script>
 </body>
